@@ -1,8 +1,9 @@
 import { Component } from "react"
-import { ContactForm } from "./ContactForm/ContactForm"
 import ContactList from "./ContactList/ContactList"
 import Filter from "./Filter/Filter"
 import styles from './App.module.css'
+import ContactForm from "./ContactForm/ContactForm"
+import toast, { Toaster } from 'react-hot-toast';
 
 export class App extends Component {
   state = {
@@ -20,7 +21,7 @@ export class App extends Component {
 
     const isExists = this.state.contacts.some(item => item.name.toLocaleLowerCase() === name)
     if (isExists) {
-      alert(`${name} is alredy in contacts`)
+      toast.error(`${name} is alredy in contacts`);
     } else {
       this.setState({contacts: [...this.state.contacts, contact]})
     }
@@ -53,8 +54,9 @@ export class App extends Component {
         <ContactForm onAddContact={this.onAddContact} />
 
         <h2 className={styles.contacts}>Contacts</h2>
-        <Filter onFilterChange={this.onFilterChange} />
-        <ContactList contacts={this.getFilteredConstacts()} onRemoveContact={this.onRemoveContact } />
+        <Filter onFilterChange={this.onFilterChange} filterValue={this.state.filter} />
+        <ContactList contacts={this.getFilteredConstacts()} onRemoveContact={this.onRemoveContact} />
+        <Toaster position="top-right" />
       </div>
     )
   }

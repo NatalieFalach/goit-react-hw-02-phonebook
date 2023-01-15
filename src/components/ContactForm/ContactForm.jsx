@@ -1,60 +1,52 @@
-import { Component } from "react";
 import { nanoid } from "nanoid";
 import styles from './ContactForm.module.css';
-
+import { Formik, Form, Field,ErrorMessage } from 'formik'
+import * as yup from 'yup';
+import "yup-phone";
 import PropTypes from 'prop-types';
 
-export class ContactForm extends Component {
-  state = {
-    name: '',
-    number: ''
-  } 
-  static propTypes = {
-    onAddContact:PropTypes.func.isRequired 
-  };
+const schema = yup.object().shape({
+  name: yup.string().required(),
+  number: yup.string().phone().required()
+})
+ 
+const ContactForm = ({onAddContact}) => {
+  const numberId = nanoid();
+  const nameId = nanoid();
 
-  numberId = nanoid();
-  nameId = nanoid();
-
-  onInputChange = e => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState({
-      [name]: value
-    })
+  const initialValues = {
+    name: '', number: ''
+  }
+  const hendleSumbmit = (values, {resetForm}) => {
+    onAddContact({ id: nanoid(), ...values });
+    resetForm();
   }
 
-  onSubmit = e => {
-    e.preventDefault();
-    this.props.onAddContact({ id: nanoid(), ...this.state })
-    this.setState({name: '', number: ''});
-  }
-
-  render() {
-    return (
-      <form className={styles.form}onSubmit={this.onSubmit}>
-        <label htmlFor={this.nameId}>Name</label>
-         <input
-            id={this.nameId}
+  return (
+    <Formik initialValues={initialValues} validationSchema={schema} onSubmit={hendleSumbmit}>
+      <Form className={styles.form}>
+        <label htmlFor={nameId}>Name</label>
+          <Field
+            id={nameId}
             type="text"
             name="name"
-            required
-            value={this.state.name}
-            onChange={this.onInputChange}
           />
-        <label className={styles.phoneLabel} htmlFor={this.numberId}>Telephone</label>
-        <input
-            id={this.numberId}
+        <ErrorMessage className={styles.errorMessage} name="name"component='div'/>
+        <label className={styles.phoneLabel} htmlFor={numberId}>Telephone</label>
+          <Field
+            id={numberId}
             type="tel"
             name="number"
-            // pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            value={this.state.number}
-            onChange={this.onInputChange}
           />
+        <ErrorMessage className={styles.errorMessage} name="number" component='div'/>
         <button className={styles.btnSubmit}type="submit">Add contact</button>
-        </form>
-      )
-  }
+      </Form>
+    </Formik>
+  )
 }
+
+ContactForm.propTypes = {
+   onAddContact:PropTypes.func.isRequired 
+}
+export default ContactForm;
