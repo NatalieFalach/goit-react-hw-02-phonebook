@@ -28,12 +28,7 @@ export class App extends Component {
   }
 
   onRemoveContact = (id) => {
-    const idx = this.state.contacts.findIndex((item) => item.id === id);
-
-    const contacts = this.state.contacts;
-    contacts.splice(idx, 1);
-
-    this.setState(prevState => ({contacts: contacts}))
+   this.setState(prevState => ({contacts: prevState.contacts.filter(item => item.id !== id)}))
 
   }
 
