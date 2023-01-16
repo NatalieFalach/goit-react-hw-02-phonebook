@@ -23,7 +23,7 @@ export class App extends Component {
     if (isExists) {
       toast.error(`${name} is alredy in contacts`);
     } else {
-      this.setState({contacts: [...this.state.contacts, contact]})
+      this.setState(prevState => ({contacts: [...prevState.contacts, contact]}))
     }
   }
 
@@ -33,7 +33,8 @@ export class App extends Component {
     const contacts = this.state.contacts;
     contacts.splice(idx, 1);
 
-    this.setState({ contacts: contacts });
+    this.setState(prevState => ({contacts: contacts}))
+
   }
 
   onFilterChange = e => {

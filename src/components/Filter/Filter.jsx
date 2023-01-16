@@ -12,7 +12,7 @@ const Filter = ({ onFilterChange, filterValue }) => {
 
 Filter.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
-  filterValue: PropTypes.string
+  filterValue: PropTypes.string.isRequired
 }
 
 export default Filter;
